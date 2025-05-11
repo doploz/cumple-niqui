@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliotecas externas -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        moda1: '#26191C',
+                        moda2: '#8C786C',
+                        moda3: '#A66253',
+                        moda4: '#8C281F',
+                        moda5: '#A63429',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'title': 'titleIn 1s ease-out forwards',
+                        'pop': 'pop 2s ease-out infinite',
+                        'color-pulse': 'colorPulse 3s ease-in-out infinite',
+                        'gradient-background': 'gradientMove 8s ease infinite',
+                        'bounce-slow': 'bounceSlow 3s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        titleIn: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pop: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        },
+                        colorPulse: {
+                            '0%, 100%': { color: '#A63429' },
+                            '50%': { color: '#A66253' }
+                        },
+                        gradientMove: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        bounceSlow: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+        
+        /* Estilos generales */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #8C786C; /* Color Moda-2-hex - Marrón medio */
+            background-color: #26191C;
+            overflow-x: hidden;
+        }
+        
+        /* Contenedor de partículas */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Gradiente animado */
+        .animate-gradient-background {
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Estilos personalizados */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #8C786C; /* Color Moda-2-hex - Marrón medio */
+            background-color: #26191C;
+            background-image: linear-gradient(45deg, rgba(140, 120, 108, 0.03) 25%, transparent 25%, transparent 75%, rgba(140, 120, 108, 0.03) 75%, rgba(140, 120, 108, 0.03)), 
+                            linear-gradient(-45deg, rgba(140, 120, 108, 0.03) 25%, transparent 25%, transparent 75%, rgba(140, 120, 108, 0.03) 75%, rgba(140, 120, 108, 0.03));
+            background-size: 60px 60px;
+            background-attachment: fixed;
+        }
+        
+        /* Estilos para imágenes flotantes */
+        .floating-image {
+            position: absolute;
+            z-index: 5;
+            width: 100px; /* Tamaño más grande en móviles */
+            height: 100px;
+            object-fit: contain;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4));
+            transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            /* Aseguramos que la transparencia del PNG se mantenga */
+            mix-blend-mode: normal;
+            cursor: move; /* Indicador visual de que se puede mover */
+            user-select: none; /* Evita la selección de texto al arrastrar */
+            -webkit-user-drag: none; /* Evita el comportamiento de arrastre predeterminado */
+            transform-style: preserve-3d; /* Permite transformaciones 3D */
+            will-change: transform; /* Optimiza el rendimiento de las animaciones */
+            animation: floatIn 1s forwards;
+        }
+        
+        /* Animación de entrada para las imágenes flotantes */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+            }
+            100% {
+                opacity: 0.95;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Retraso en la animación para cada imagen */
+        .float-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .float-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .float-3 {
+            animation-delay: 0.6s;
+        }
+        
+        .float-4 {
+            animation-delay: 0.8s;
+        }
+        
+        @media (min-width: 768px) {
+            .floating-image {
+                width: 140px; /* Tamaño mucho más grande en escritorio */
+                height: 140px;
+            }
+            
+            .hero-container {
+                height: 500px !important; /* Contenedor más alto en escritorio */
+                max-width: 700px !important;
+            }
+        }
+        
+        /* Ajustes para dispositivos móviles */
+        @media (max-width: 767px) {
+            .floating-image {
+                /* Posicionamiento más cercano a los bordes en móviles */
+                transform: scale(0.9);
+            }
+            
+            /* Ajustamos la posición de cada imagen en móviles */
+            .floating-image.float-1 {
+                top: 8% !important;
+                left: 2% !important;
+            }
+            
+            .floating-image.float-2 {
+                top: 12% !important;
+                right: 2% !important;
+            }
+            
+            .floating-image.float-3 {
+                bottom: 10% !important;
+                left: 3% !important;
+            }
+            
+            .floating-image.float-4 {
+                bottom: 15% !important;
+                right: 3% !important;
+            }
+        }
+        
+        .floating-image:hover {
+            transform: scale(1.8) rotate(5deg);
+            opacity: 1;
+            filter: drop-shadow(0 15px 30px rgba(166, 52, 41, 0.9));
+            z-index: 100; /* Asegura que esté por encima de otros elementos al hacer hover */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease, opacity 0.3s ease;
+        }
+        
+        /* Eliminamos el efecto de brillo para mantener la transparencia original */
+        
+        .float-1 {
+            animation: float1 8s ease-in-out infinite;
+        }
+        
+        .float-2 {
+            animation: float2 10s ease-in-out infinite;
+        }
+        
+        .float-3 {
+            animation: float3 12s ease-in-out infinite;
+        }
+        
+        .float-4 {
+            animation: float1 9s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+        
+        @keyframes float1 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(8px, -8px) rotate(3deg); }
+            40% { transform: translate(15px, -12px) rotate(8deg); }
+            60% { transform: translate(12px, -6px) rotate(5deg); }
+            80% { transform: translate(5px, -2px) rotate(2deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        @keyframes float2 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-6px, 3px) rotate(-2deg); }
+            40% { transform: translate(-12px, 8px) rotate(-5deg); }
+            60% { transform: translate(-8px, 12px) rotate(-3deg); }
+            80% { transform: translate(-4px, 6px) rotate(-1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        @keyframes float3 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(4px, 6px) rotate(3deg); }
+            40% { transform: translate(8px, 12px) rotate(8deg); }
+            60% { transform: translate(12px, 8px) rotate(12deg); }
+            80% { transform: translate(6px, 4px) rotate(6deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        /* Estilo para desplazamiento suave */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Estilo para la sección de mensajes, usando un fondo de color diferente */
+        .messages-section {
+            background: #26191C;
+            position: relative;
+            overflow: hidden;
+        }
+        .messages-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(166, 98, 83, 0.2), transparent 60%);
+            z-index: 0;
+        }
+        .messages-section > * {
+            position: relative;
+            z-index: 1;
+        }
+        /* Estilo para las tarjetas de mensaje */
+        .message-card {
+            background-color: rgba(38, 25, 27, 0.7);
+            border-left: 3px solid #A63429;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        .message-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to bottom, #A63429, #A66253);
+            transition: height 0.3s ease;
+        }
+        .message-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .message-card:hover::before {
+            height: 100%;
+        }
+        /* Estilo para la galería de fotos */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Columnas más pequeñas para móviles */
+            gap: 0.75rem; /* Espacio más compacto para móviles */
+        }
+        @media (min-width: 640px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(38, 25, 27, 0.8), transparent);
+            z-index: 1;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%; /* Asegura que la imagen cubra el contenedor */
+            object-fit: cover; /* Recorta la imagen para que encaje sin distorsionar */
+            transition: transform 0.5s ease; /* Transición suave al pasar el mouse */
+            aspect-ratio: 3/2;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.08); /* Efecto de zoom ligero al pasar el mouse */
+        }
+        .gallery-item:hover {
+            box-shadow: 8px 8px 0 #000;
+            }
+            .gallery-item {
+                position: relative;
+                overflow: hidden;
+                border-radius: 4px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+            }
+            .gallery-item::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 40%;
+                background: linear-gradient(to top, rgba(38, 25, 27, 0.8), transparent);
+                z-index: 1;
+            }
+            .gallery-item img {
+                width: 100%;
+                height: 100%; /* Asegura que la imagen cubra el contenedor */
+                object-fit: cover; /* Recorta la imagen para que encaje sin distorsionar */
+                transition: transform 0.5s ease; /* Transición suave al pasar el mouse */
+                aspect-ratio: 3/2;
+            }
+            .gallery-item:hover img {
+                transform: scale(1.08); /* Efecto de zoom ligero al pasar el mouse */
+            }
+            .gallery-item:hover {
+                box-shadow: 8px 8px 0 #000;
+            }
+        </style>
+    </head>
+    <body class="antialiased">
+        <!-- Script para el confeti -->
+        <!-- Sonidos para la página -->
+        <script>
+            // Sonido de celebración
+            var sonidoCelebracion = new Howl({
+                src: ['https://assets.mixkit.co/sfx/preview/mixkit-crowd-party-cheers-whistles-and-applause-532.mp3'],
+                volume: 0.7,
+                preload: true
+            });
+            
+            // Función para lanzar confeti con sonido
+            function lanzarConfetiYSonido() {
+                // Reproducir sonido
+                sonidoCelebracion.play();
+                
+                // Lanzar confeti
+                lanzarConfeti();
+            }
+            
+            // Función para lanzar confeti
+            function lanzarConfeti() {
+                // Colores festivos
+                var colores = ['#A63429', '#A66253', '#FF69B4', '#FFD700', '#FFFFFF'];
+                
+                // Confeti desde arriba
+                confetti({
+                    particleCount: 150,
+                    spread: 180,
+                    origin: { y: 0 },
+                    colors: colores,
+                    zIndex: 9999
+                });
+                
+                // Confeti desde la izquierda
+                setTimeout(function() {
+                    confetti({
+                        particleCount: 80,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: colores,
+                        zIndex: 9999
+                    });
+                }, 250);
+                
+                // Confeti desde la derecha
+                setTimeout(function() {
+                    confetti({
+                        particleCount: 80,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: colores,
+                        zIndex: 9999
+                    });
+                }, 400);
+            }
+            
+            // Configuración y carga de partículas
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inicializar partículas
+                if (typeof particlesJS !== 'undefined') {
+                    particlesJS('particles-js', {
+                        particles: {
+                            number: { value: 30, density: { enable: true, value_area: 800 } },
+                            color: { value: ['#A63429', '#A66253', '#8C786C'] },
+                            shape: { type: 'circle' },
+                            opacity: { value: 0.3, random: true },
+                            size: { value: 3, random: true },
+                            line_linked: { enable: false },
+                            move: { enable: true, speed: 1, direction: 'none', random: true, out_mode: 'out' }
+                        }
+                    });
+                }
+                
+                // Efecto parallax para imágenes flotantes
+                document.addEventListener('mousemove', function(e) {
+                    const moveX = (e.clientX - window.innerWidth / 2) / 50;
+                    const moveY = (e.clientY - window.innerHeight / 2) / 50;
+        
+        <!-- Gradiente animado de fondo -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#26191C] via-[#331f24] to-[#26191C] z-0 animate-gradient-background"></div>
+        <!-- Las imágenes flotantes se moverán dentro del div del hero -->        
+        
+        <div class="absolute top-0 left-0 w-full h-full">
+            <div class="absolute top-0 left-0 w-full h-full opacity-20" style="background: radial-gradient(circle at 50% 50%, rgba(166, 98, 83, 0.3), transparent 70%)"></div>
+            <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-50"></div>
+        </div>
+        <div class="container mx-auto">
+            <h1 class="font-['Montserrat'] text-4xl md:text-6xl mb-4 font-bold text-white relative inline-block drop-shadow-lg z-10 animate-title"><span class="font-bold text-[#A63429] drop-shadow-md animate-color-pulse">Feliz</span> Cumpleaños, <span class="font-bold animate-pop">Niqui</span></h1>
+            <p class="font-['Raleway'] text-lg md:text-xl text-white max-w-xl mx-auto drop-shadow-md z-10 animate-fade-in">Una pequeña web llena de <span class="text-[#A66253] font-bold animate-color-pulse">amor</span> y <span class="text-[#A66253] font-bold animate-color-pulse">recuerdos</span> para celebrar tu día especial.</p>
+            <button id="botonConfeti" class="mt-4 px-6 py-3 bg-gradient-to-r from-[#A63429] to-[#A66253] text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none z-10 animate-bounce-slow" onclick="lanzarConfetiYSonido()">
+                ¡Más Confeti! 🎉
+            </button>
+            <div class="mt-4">
+                <div class="relative mx-auto hero-container" style="width: 95%; max-width: 450px; height: 400px; position: relative; perspective: 1000px; margin-bottom: 20px;">
+                    <!-- Ajustamos el contenedor para que sea más adecuado en móviles -->
+                    <!-- Contenedor principal con posición relativa para que las imágenes flotantes se posicionen dentro de él -->
+                    
+                    <!-- Foto principal en el centro -->
+                    <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                        <div class="p-1 bg-gradient-to-br from-[#A66253] to-[#A63429] rounded-full">
+                            <img src="assets/nico.png" alt="Foto de Niqui" class="rounded-full transform hover:scale-110 transition-transform duration-300 w-32 h-32 md:w-48 md:h-48 object-cover">
+                        </div>
+                    </div>
+                    
+                    <!-- Imágenes flotantes alrededor de la foto principal con mejor distribución -->
+                    <img src="assets/gon.png" alt="Imagen flotante 1" class="floating-image float-1 absolute" style="top: 5%; left: 5%;">
+                    <img src="assets/guts.png" alt="Imagen flotante 2" class="floating-image float-2 absolute" style="top: 10%; right: 5%;">
+                    <img src="assets/torfin.png" alt="Imagen flotante 3" class="floating-image float-3 absolute" style="bottom: 5%; left: 5%;">
+                    <img src="assets/mob.png" alt="Imagen flotante 4" class="floating-image float-4 absolute" style="bottom: 10%; right: 5%;">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="tu-mensaje" class="py-10 md:py-16 px-4 md:px-6">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="font-['Montserrat'] text-3xl text-center mb-8 text-[#A66253] font-light">Mi Mensaje <span class="font-semibold">para Ti</span></h2>
+            <div class="bg-white p-6 md:p-8 border-4 border-black shadow-[8px_8px_0_0_#000] relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-[#A63429] border-l-[40px] border-l-transparent z-10"></div>
+                <p class="font-['Raleway'] text-lg mb-4 text-[#A66253] font-medium">
+                    Querida Niqui,
+                </p>
+                <p class="mb-4 text-[#8C786C]">
+                    Hoy celebramos un año más de tu maravillosa existencia, y quería hacer algo especial para demostrarte cuánto significas para mí. No es solo un cumpleaños; es una oportunidad para mirar atrás a todos los momentos que hemos compartido, las risas, las aventuras y también los desafíos que hemos superado juntos.
+                </p>
+                <p class="mb-4 text-[#8C786C]">
+                    Desde que éramos pequeños, siempre has sido mi cómplice, mi confidente y mi mejor amiga. Recuerdo cuando hacíamos esas pijamadas en casa y nos quedábamos hasta tarde viendo películas de terror. También aquel viaje a la playa donde construimos ese enorme castillo de arena. Esos momentos están grabados en mi corazón para siempre.
+                </p>
+                <p class="mb-4 text-[#8C786C]">
+                    Admiro tu perseverancia, tu bondad infinita y ese sentido del humor que ilumina cualquier habitación. Siempre me inspiras a ser mejor persona. Verte crecer y convertirte en la persona increíble que eres hoy me llena de orgullo.
+                </p>
+                <p class="mb-4 text-[#8C786C]">
+                    Espero que esta pequeña web te traiga una sonrisa y te recuerde lo mucho que te queremos todos. Aquí he reunido algunos recuerdos y mensajes de personas que te aprecian.
+                </p>
+                <p class="mb-4 text-[#8C786C]">
+                    Te deseo un día lleno de alegría, amor y todo lo que te haga feliz. Que este nuevo año de vida te traiga aún más éxitos, salud y momentos inolvidables.
+                </p>
+                <p class="font-['Raleway'] text-lg text-right mt-6 text-[#A66253] font-medium">
+                    Con todo mi amor,<br>
+                    <span class="text-[#A63429] text-xl font-semibold">Azahara</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria" class="py-10 md:py-16 px-4 md:px-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-[rgba(166,98,83,0.05)] to-[rgba(140,40,31,0.1)] z-0"></div>
+        <div class="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-br from-[rgba(166,98,83,0.1)] to-transparent rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/3 z-0"></div>
+        <div class="relative z-10">
+        <div class="container mx-auto">
+            <h2 class="font-['Montserrat'] text-3xl text-center mb-8 text-[#A66253] font-light">Nuestros <span class="font-semibold">Recuerdos Visuales</span></h2>
+            <div class="gallery-grid">
+                <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/A66253/26191C?text=Foto+Recuerdo+1" alt="Recuerdo 1">
+                </div>
+                <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/8C786C/26191C?text=Foto+Recuerdo+2" alt="Recuerdo 2">
+                </div>
+                <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/A63429/26191C?text=Foto+Recuerdo+3" alt="Recuerdo 3">
+                </div>
+                 <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/8C281F/26191C?text=Foto+Recuerdo+4" alt="Recuerdo 4">
+                </div>
+                <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/A66253/26191C?text=Foto+Recuerdo+5" alt="Recuerdo 5">
+                </div>
+                <div class="gallery-item overflow-hidden">
+                    <img src="https://placehold.co/300x200/8C786C/26191C?text=Foto+Recuerdo+6" alt="Recuerdo 6">
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                 <h3 class="font-['Montserrat'] text-2xl mb-4 text-[#A66253] font-light">Un <span class="font-semibold">Video Especial</span></h3>
+                 <div class="aspect-w-16 aspect-h-9 max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[rgba(140,40,31,0.2)] to-transparent z-10 pointer-events-none"></div>
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                 </div>
+                 <p class="text-sm text-[#8C786C] mt-2">Un momento que siempre recordaremos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="mensajes" class="messages-section py-10 md:py-16 px-4 md:px-6">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="font-['Montserrat'] text-3xl text-center mb-12 text-[#A66253] font-light">Mensajes de <span class="font-semibold">Quienes Te Quieren</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="message-card p-5 md:p-6 rounded-lg">
+                    <p class="italic mb-4">"Querida Niqui, te deseo un cumpleaños maravilloso lleno de alegría y amor. ¡Eres una persona increíble y la mejor amiga que alguien podría tener!"</p>
+                    <p class="text-right font-semibold">- Laura</p>
+                </div>
+                <div class="message-card p-5 md:p-6 rounded-lg">
+                    <p class="italic mb-4">"¡Feliz cumpleaños! Espero que tengas el mejor día. Gracias por ser siempre tan comprensiva y estar ahí cuando te necesito. Te mando un abrazo fuerte!"</p>
+                    <p class="text-right font-semibold">- Carlos</p>
+                </div>
+                <div class="message-card p-5 md:p-6 rounded-lg">
+                    <p class="italic mb-4">"¡Muchas felicidades en tu día! Que la pases genial y que todos tus deseos se cumplan. Gracias por todos esos consejos y por ser mi confidente. ¡Te quiero mucho!"</p>
+                    <p class="text-right font-semibold">- Mamá</p>
+                </div>
+                 <div class="message-card p-5 md:p-6 rounded-lg">
+                    <p class="italic mb-4">"Un año más de vida para una persona tan especial. Gracias por tu amistad y por todas esas tardes de café y conversaciones. Eres única y especial. ¡Feliz cumpleaños!"</p>
+                    <p class="text-right font-semibold">- Papá</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gustos" class="py-10 md:py-16 px-4 md:px-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-tl from-[rgba(166,98,83,0.05)] to-[rgba(38,25,27,0.08)] z-0"></div>
+        <div class="relative z-10">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="font-['Montserrat'] text-3xl text-center mb-8 text-[#A66253] font-light">Cosas que <span class="font-semibold">Te Hacen Sonreír</span></h2>
+            <div class="bg-white p-6 md:p-8 border-4 border-black shadow-[8px_8px_0_0_#000] relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-0 h-0 border-t-[40px] border-t-[#A63429] border-l-[40px] border-l-transparent z-10"></div>
+                <p class="text-lg mb-4 text-[#8C786C]">Sabemos cuánto te gusta la música de Taylor Swift y pasar tardes enteras leyendo novelas románticas. Aquí hay un pequeño recordatorio de algunas de tus cosas favoritas:</p>
+                <ul class="list-disc list-inside mb-4 text-[#8C786C]">
+                    <li>Dibujar y pintar acuarelas</li>
+                    <li>Pizza con extra de queso</li>
+                    <li>"La vida es lo que pasa mientras estás ocupado haciendo otros planes" - John Lennon</li>
+                    <li>"All Too Well" de Taylor Swift</li>
+                </ul>
+                <div class="mt-8 text-center">
+                     <h3 class="font-['Montserrat'] text-2xl mb-4 text-[#A66253] font-light">Tu <span class="font-semibold">Banda Sonora</span></h3>
+                     <iframe src="https://open.spotify.com/embed/playlist/0JGOiO34nwfUdDrD612dOp" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media" class="rounded-lg shadow-lg"></iframe>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="bg-[rgba(38,25,27,0.9)] text-[#8C786C] py-6 md:py-8 px-4 md:px-6 text-center relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-30"></div>
+        <div class="container mx-auto">
+            <p>&copy; 2025 Hecho con mucho cariño para Niqui.</p>
+        </div>
+    </footer>
+
+    <!-- Script para hacer las imágenes arrastrables con mejor soporte para todos los dispositivos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Seleccionar todas las imágenes flotantes
+            const draggableImages = document.querySelectorAll('.floating-image');
+            
+            // Variable global para rastrear qué imagen se está arrastrando
+            let activeImage = null;
+            let initialX, initialY;
+            let currentX, currentY;
+            let xOffset = 0, yOffset = 0;
+            
+            // Función para iniciar el arrastre
+            const dragStart = function(e) {
+                if (e.type === "touchstart") {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
+                
+                if (e.target.classList.contains('floating-image')) {
+                    activeImage = e.target;
+                    activeImage.style.zIndex = '100';
+                    activeImage.style.cursor = 'grabbing';
+                    activeImage.classList.add('dragging');
+                    
+                    // Detener animaciones mientras se arrastra
+                    activeImage.style.animation = 'none';
+                }
+                
+                // Prevenir comportamiento predeterminado
+                if (e.type === "touchstart") {
+                    e.preventDefault();
+                }
+            };
+            
+            // Función para finalizar el arrastre
+            const dragEnd = function() {
+                if (activeImage) {
+                    // Restaurar animación según la clase
+                    if (activeImage.classList.contains('float-1')) {
+                        activeImage.style.animation = 'float1 8s ease-in-out infinite';
+                    } else if (activeImage.classList.contains('float-2')) {
+                        activeImage.style.animation = 'float2 10s ease-in-out infinite';
+                    } else if (activeImage.classList.contains('float-3')) {
+                        activeImage.style.animation = 'float3 12s ease-in-out infinite';
+                    } else if (activeImage.classList.contains('float-4')) {
+                        activeImage.style.animation = 'float1 9s ease-in-out infinite';
+                    }
+                    
+                    activeImage.style.zIndex = '5';
+                    activeImage.style.cursor = 'move';
+                    activeImage.classList.remove('dragging');
+                    activeImage = null;
+                }
+            };
+            
+            // Función para mover la imagen en todos los ejes X e Y
+            const drag = function(e) {
+                if (activeImage) {
+                    e.preventDefault();
+                    
+                    if (e.type === "touchmove") {
+                        currentX = e.touches[0].clientX - initialX;
+                        currentY = e.touches[0].clientY - initialY;
+                    } else {
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+                    }
+                    
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    
+                    // Obtener el contenedor padre
+                    const container = activeImage.closest('.hero-container');
+                    const containerRect = container.getBoundingClientRect();
+                    
+                    // Permitir movimiento libre dentro del viewport
+                    // Solo limitamos para que no se salga completamente del contenedor
+                    const maxX = containerRect.width - (activeImage.offsetWidth * 0.3);
+                    const maxY = containerRect.height - (activeImage.offsetHeight * 0.3);
+                    const minX = -(activeImage.offsetWidth * 0.7);
+                    const minY = -(activeImage.offsetHeight * 0.7);
+                    
+                    // Permitir movimiento más libre
+                    let newX = Math.max(minX, Math.min(currentX, maxX));
+                    let newY = Math.max(minY, Math.min(currentY, maxY));
+                    
+                    // Aplicar la nueva posición con una ligera rotación basada en la dirección del movimiento
+                    const rotationX = newY * 0.05; // Rotación basada en el movimiento vertical
+                    const rotationY = -newX * 0.05; // Rotación basada en el movimiento horizontal
+                    
+                    activeImage.style.transform = `translate3d(${newX}px, ${newY}px, 0) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+                    
+                    // Guardar la posición para futuros cálculos
+                    activeImage.setAttribute('data-x', newX);
+                    activeImage.setAttribute('data-y', newY);
+                    activeImage.setAttribute('data-rotateX', rotationX);
+                    activeImage.setAttribute('data-rotateY', rotationY);
+                }
+            };
+            
+            // Inicializar las posiciones de las imágenes
+            draggableImages.forEach(img => {
+                // Convertir posiciones iniciales de porcentaje a píxeles
+                const container = img.closest('.hero-container');
+                const containerRect = container.getBoundingClientRect();
+                
+                // Obtener posiciones iniciales de los estilos inline
+                let topPos = img.style.top;
+                let leftPos = img.style.left;
+                let rightPos = img.style.right;
+                let bottomPos = img.style.bottom;
+                
+                // Inicializar posiciones
+                let initialLeft = 0;
+                let initialTop = 0;
+                
+                // Convertir porcentajes a píxeles
+                if (leftPos && leftPos.includes('%')) {
+                    initialLeft = (parseFloat(leftPos) / 100) * containerRect.width;
+                    img.style.left = initialLeft + 'px';
+                }
+                
+                if (topPos && topPos.includes('%')) {
+                    initialTop = (parseFloat(topPos) / 100) * containerRect.height;
+                    img.style.top = initialTop + 'px';
+                }
+                
+                if (rightPos && rightPos.includes('%')) {
+                    initialLeft = containerRect.width - ((parseFloat(rightPos) / 100) * containerRect.width) - img.offsetWidth;
+                    img.style.left = initialLeft + 'px';
+                    img.style.right = 'auto';
+                }
+                
+                if (bottomPos && bottomPos.includes('%')) {
+                    initialTop = containerRect.height - ((parseFloat(bottomPos) / 100) * containerRect.height) - img.offsetHeight;
+                    img.style.top = initialTop + 'px';
+                    img.style.bottom = 'auto';
+                }
+                
+                // Preparar para transformaciones
+                img.style.transform = 'translate3d(0px, 0px, 0)';
+                img.setAttribute('data-x', '0');
+                img.setAttribute('data-y', '0');
+            });
+            
+            // Agregar eventos de mouse
+            document.addEventListener('mousedown', dragStart, false);
+            document.addEventListener('mouseup', dragEnd, false);
+            document.addEventListener('mousemove', drag, false);
+            
+            // Agregar eventos táctiles
+            document.addEventListener('touchstart', dragStart, { passive: false });
+            document.addEventListener('touchend', dragEnd, false);
+            document.addEventListener('touchmove', drag, { passive: false });
+            
+            // Evitar que las imágenes sean arrastradas por el navegador
+            draggableImages.forEach(img => {
+                img.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                });
+            });
+            
+            // Ajustar posiciones cuando cambia el tamaño de la ventana
+            window.addEventListener('resize', function() {
+                draggableImages.forEach(img => {
+                    // Restaurar posiciones iniciales al cambiar tamaño
+                    img.style.transform = 'translate3d(0px, 0px, 0)';
+                    img.setAttribute('data-x', '0');
+                    img.setAttribute('data-y', '0');
+                });
+            });
+        });
+    </script>
+    <!-- Script para conectar el botón de confeti con la función -->
+    <script>
+        // Configurar el botón de confeti cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Conectar el botón de confeti con la función para lanzar confeti manualmente
+            var botonConfeti = document.getElementById('botonConfeti');
+            if (botonConfeti) {
+                botonConfeti.addEventListener('click', function() {
+                    lanzarConfeti();
+                    
+                    // Efecto de pulsación en el botón
+                    this.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        this.classList.remove('animate-pulse');
+                    }, 1000);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

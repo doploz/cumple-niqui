@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Cumpleaños Niqui</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bibliotecas externas -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        moda1: '#26191C',
+                        moda2: '#8C786C',
+                        moda3: '#A66253',
+                        moda4: '#8C281F',
+                        moda5: '#A63429',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'title': 'titleIn 1s ease-out forwards',
+                        'pop': 'pop 2s ease-out infinite',
+                        'color-pulse': 'colorPulse 3s ease-in-out infinite',
+                        'gradient-background': 'gradientMove 8s ease infinite',
+                        'bounce-slow': 'bounceSlow 3s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        titleIn: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pop: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' }
+                        },
+                        colorPulse: {
+                            '0%, 100%': { color: '#A63429' },
+                            '50%': { color: '#A66253' }
+                        },
+                        gradientMove: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        bounceSlow: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: #8C786C;
+            background-color: #26191C;
+            overflow-x: hidden;
+        }
+        
+        /* Contenedor de partículas */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        /* Elementos decorativos */
+        .decorative-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(8px);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .decorative-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 1;
+            animation: twinkle 3s infinite alternate;
+            pointer-events: none;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.7; }
+        }
+        
+        /* Gradiente animado */
+        .animate-gradient-background {
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease infinite;
+        }
+        
+        /* Imágenes flotantes */
+        .floating-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+            transition: all 0.3s ease;
+            opacity: 0.9;
+            z-index: 2;
+            cursor: move;
+            animation: float 3s ease-in-out infinite alternate, fadeIn 1.5s ease-out forwards;
+            transform-origin: center;
+            transform: scale(0);
+            position: absolute;
+        }
+        
+        .floating-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: white;
+            padding: 4px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .floating-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Animación de entrada para las imágenes flotantes */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+            }
+            100% {
+                opacity: 0.95;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Retraso en la animación para cada imagen */
+        .float-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .float-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .float-3 {
+            animation-delay: 0.6s;
+        }
+        
+        .float-4 {
+            animation-delay: 0.8s;
+        }
+        
+        /* Tamaños para escritorio */
+        @media (min-width: 768px) {
+            .floating-image {
+                width: 140px; /* Tamaño mucho más grande en escritorio */
+                height: 140px;
+            }
+            
+            .hero-container {
+                height: 500px !important; /* Contenedor más alto en escritorio */
+                max-width: 700px !important;
+            }
+        }
+        
+        /* Efecto hover de las imágenes */
+        .floating-image:hover {
+            transform: scale(1.8) rotate(5deg);
+            opacity: 1;
+            filter: drop-shadow(0 15px 30px rgba(166, 52, 41, 0.9));
+            z-index: 100; /* Asegura que esté por encima de otros elementos al hacer hover */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease, opacity 0.3s ease;
+        }
+        
+        /* Secciones */
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, #A63429, #A66253);
+            border-radius: 3px;
+        }
+        
+        /* Tarjetas de mensajes */
+        .message-card {
+            background-color: rgba(38, 25, 28, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .message-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .message-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #A63429, #A66253);
+        }
+        
+        /* Galería de imágenes */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            background-color: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(166, 52, 41, 0.5);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* Galería */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(38, 25, 27, 0.8), transparent);
+            z-index: 1;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+            display: block;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.08); /* Efecto de zoom ligero al pasar el mouse */
+        }
+        
+        .gallery-item:hover {
+            box-shadow: 8px 8px 0 #000;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+    <!-- Sonidos para la página -->
+    <script>
+        // Sonido de celebración
+        var sonidoCelebracion = new Howl({
+            src: ['https://assets.mixkit.co/sfx/preview/mixkit-crowd-party-cheers-whistles-and-applause-532.mp3'],
+            volume: 0.7,
+            preload: true
+        });
+        
+        // Función para lanzar confeti con sonido
+        function lanzarConfetiYSonido() {
+            // Reproducir sonido
+            sonidoCelebracion.play();
+            
+            // Lanzar confeti
+            lanzarConfeti();
+        }
+        
+        // Función para lanzar confeti
+        function lanzarConfeti() {
+            // Colores festivos
+            var colores = ['#A63429', '#A66253', '#FF69B4', '#FFD700', '#FFFFFF'];
+            
+            // Confeti desde arriba
+            confetti({
+                particleCount: 150,
+                spread: 180,
+                origin: { y: 0 },
+                colors: colores,
+                zIndex: 9999
+            });
+            
+            // Confeti desde la izquierda
+            setTimeout(function() {
+                confetti({
+                    particleCount: 80,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colores,
+                    zIndex: 9999
+                });
+            }, 250);
+            
+            // Confeti desde la derecha
+            setTimeout(function() {
+                confetti({
+                    particleCount: 80,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colores,
+                    zIndex: 9999
+                });
+            }, 400);
+        }
+        
+        // Configuración y carga de partículas
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar partículas
+            if (typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 30, density: { enable: true, value_area: 800 } },
+                        color: { value: ['#A63429', '#A66253', '#8C786C'] },
+                        shape: { type: 'circle' },
+                        opacity: { value: 0.3, random: true },
+                        size: { value: 3, random: true },
+                        line_linked: { enable: false },
+                        move: { enable: true, speed: 1, direction: 'none', random: true, out_mode: 'out' }
+                    }
+                });
+            }
+            
+            // Efecto parallax para imágenes flotantes
+            document.addEventListener('mousemove', function(e) {
+                const moveX = (e.clientX - window.innerWidth / 2) / 50;
+                const moveY = (e.clientY - window.innerHeight / 2) / 50;
+                
+                document.querySelectorAll('.floating-image').forEach(function(img, index) {
+                    const factor = (index + 1) * 0.2;
+                    img.style.transform = `translateX(${moveX * factor}px) translateY(${moveY * factor}px)`;
+                });
+            });
+            
+            // Configurar el botón
+            var boton = document.getElementById('botonConfeti');
+            if (boton) {
+                boton.onclick = lanzarConfetiYSonido;
+            }
+            
+            // Hacer las imágenes arrastrables
+            document.querySelectorAll('.floating-image').forEach(function(img) {
+                hacerArrastrable(img);
+            });
+            
+            // Lanzar confeti al cargar
+            setTimeout(lanzarConfeti, 800);
+        });
+        
+        // Función para hacer elementos arrastrables
+        function hacerArrastrable(elemento) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            
+            elemento.onmousedown = iniciarArrastre;
+            elemento.ontouchstart = iniciarArrastreTactil;
+            
+            function iniciarArrastreTactil(e) {
+                e.preventDefault();
+                var touch = e.touches[0];
+                iniciarArrastre(touch);
+                
+                document.ontouchmove = arrastrarElementoTactil;
+                document.ontouchend = detenerArrastreTactil;
+            }
+            
+            function iniciarArrastre(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                // Obtener la posición del cursor al inicio
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                document.onmouseup = detenerArrastre;
+                document.onmousemove = arrastrarElemento;
+                
+                // Traer al frente el elemento que se está arrastrando
+                elemento.style.zIndex = "1000";
+            }
+            
+            function arrastrarElementoTactil(e) {
+                e.preventDefault();
+                var touch = e.touches[0];
+                arrastrarElemento(touch);
+            }
+            
+            function arrastrarElemento(e) {
+                e = e || window.event;
+                e.preventDefault();
+                
+                // Calcular la nueva posición del cursor
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                
+                // Establecer la nueva posición del elemento
+                elemento.style.top = (elemento.offsetTop - pos2) + "px";
+                elemento.style.left = (elemento.offsetLeft - pos1) + "px";
+            }
+            
+            function detenerArrastreTactil() {
+                document.ontouchend = null;
+                document.ontouchmove = null;
+            }
+            
+            function detenerArrastre() {
+                // Detener el movimiento cuando se suelta el botón del mouse
+                document.onmouseup = null;
+                document.onmousemove = null;
+                
+                // Restaurar el z-index original
+                setTimeout(function() {
+                    elemento.style.zIndex = "5";
+                }, 100);
+            }
+        }
+        
+        // Lanzar confeti inmediatamente
+        window.onload = function() {
+            confetti({
+                particleCount: 100,
+                spread: 160,
+                zIndex: 9999
+            });
+        };
+    </script>
+
+    <header class="relative overflow-hidden text-[#8C786C] px-4 md:px-6 text-center min-h-screen flex flex-col justify-between items-center py-10">
+        <!-- Contenedor para las partículas de fondo -->
+        <div id="particles-js" class="absolute top-0 left-0 w-full h-full"></div>
+        
+        <!-- Gradiente animado de fondo -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#26191C] via-[#331f24] to-[#26191C] z-0 animate-gradient-background"></div>
+        
+        <!-- Elementos decorativos adicionales para llenar el espacio -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+            <div class="decorative-element w-28 h-28 top-10 left-10 bg-gradient-to-r from-[#A63429] to-[#A66253]"></div>
+            <div class="decorative-element w-40 h-40 top-[15%] right-[8%] bg-gradient-to-r from-[#A66253] to-[#A63429]"></div>
+            <div class="decorative-element w-32 h-32 bottom-[25%] left-[12%] bg-gradient-to-r from-[#8C281F] to-[#A63429]"></div>
+            <div class="decorative-element w-24 h-24 top-[35%] right-[15%] bg-gradient-to-r from-[#A63429] to-[#8C281F]"></div>
+            <div class="decorative-element w-20 h-20 bottom-[15%] right-[25%] bg-gradient-to-r from-[#A66253] to-[#8C281F]"></div>
+            <div class="decorative-element w-16 h-16 top-[25%] left-[20%] bg-gradient-to-r from-[#8C786C] to-[#A63429]"></div>
+            
+            <!-- Estrellas decorativas -->
+            <div class="decorative-star top-[10%] left-[30%]" style="animation-delay: 0.5s;"></div>
+            <div class="decorative-star top-[15%] left-[50%]" style="animation-delay: 1.2s;"></div>
+            <div class="decorative-star top-[20%] left-[70%]" style="animation-delay: 0.8s;"></div>
+            <div class="decorative-star top-[30%] left-[25%]" style="animation-delay: 1.5s;"></div>
+            <div class="decorative-star top-[40%] left-[60%]" style="animation-delay: 0.3s;"></div>
+            <div class="decorative-star top-[50%] left-[40%]" style="animation-delay: 1.7s;"></div>
+            <div class="decorative-star top-[60%] left-[80%]" style="animation-delay: 0.9s;"></div>
+            <div class="decorative-star top-[70%] left-[20%]" style="animation-delay: 1.1s;"></div>
+            <div class="decorative-star top-[80%] left-[65%]" style="animation-delay: 0.6s;"></div>
+        </div>
+        
+        <!-- Líneas decorativas -->
+        <div class="absolute top-0 left-0 w-full h-full">
+            <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-50"></div>
+            <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-50"></div>
+            <div class="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-transparent via-[#A63429] to-transparent opacity-30"></div>
+            <div class="absolute top-0 right-0 h-full w-px bg-gradient-to-b from-transparent via-[#A63429] to-transparent opacity-30"></div>
+            <div class="absolute top-[20%] left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-20"></div>
+            <div class="absolute bottom-[20%] left-0 w-full h-px bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-20"></div>
+        </div>
+        
+        <div class="container mx-auto z-10">
+            <div class="relative mb-6">
+                <h1 class="font-['Montserrat'] text-4xl md:text-6xl mb-4 font-bold text-white relative inline-block drop-shadow-lg animate-title"><span class="font-bold text-[#A63429] drop-shadow-md animate-color-pulse">Feliz</span> Cumpleaños, <span class="font-bold animate-pop">Niqui</span></h1>
+                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#A63429] to-transparent opacity-60"></div>
+            </div>
+            <p class="font-['Raleway'] text-lg md:text-xl text-white max-w-xl mx-auto drop-shadow-md animate-fade-in mb-6">Una pequeña web llena de <span class="text-[#A66253] font-bold animate-color-pulse">amor</span> y <span class="text-[#A66253] font-bold animate-color-pulse">recuerdos</span> para celebrar tu día especial.</p>
+            
+            <button id="botonConfeti" class="mb-8 px-6 py-3 bg-gradient-to-r from-[#A63429] to-[#A66253] text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none z-10 animate-bounce-slow" onclick="lanzarConfetiYSonido()">
+                ¡Más Confeti! 🎉
+            </button>
+        </div>
+        
+        <div class="container mx-auto flex-grow flex items-center justify-center">
+            <div class="relative mx-auto hero-container" style="width: 95%; max-width: 450px; height: 450px; position: relative; perspective: 1000px; margin-bottom: 20px;">
+                    <!-- Foto principal en el centro -->
+                    <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                        <div class="p-1 bg-gradient-to-br from-[#A66253] to-[#A63429] rounded-full">
+                            <img src="assets/nico.png" alt="Niqui" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-[#A63429]">
+                        </div>
+                    </div>
+                    
+                    <!-- Organizamos mejor las imágenes flotantes para una distribución más equilibrada -->
+                    <!-- Personajes de manga en las esquinas -->
+                    <img src="assets/gon.png" alt="Imagen 1" class="floating-image" style="left: 8%; top: 20%; width: 85px; height: 85px;" draggable="true">
+                    <img src="assets/guts.png" alt="Imagen 2" class="floating-image" style="right: 8%; top: 20%; width: 85px; height: 85px;" draggable="true">
+                    <img src="assets/mob.png" alt="Imagen 3" class="floating-image" style="left: 8%; bottom: 20%; width: 85px; height: 85px;" draggable="true">
+                    <img src="assets/torfin.png" alt="Imagen 4" class="floating-image" style="right: 8%; bottom: 20%; width: 85px; height: 85px;" draggable="true">
+                    
+                    <!-- Fotos de recuerdos en posiciones intermedias -->
+                    <div class="floating-image" style="left: 25%; top: 15%; width: 100px; height: 100px;" draggable="true">
+                        <img src="recuerdos/recuerdos 1.jpg" alt="Recuerdo 1">
+                    </div>
+                    <div class="floating-image" style="right: 25%; top: 15%; width: 100px; height: 100px;" draggable="true">
+                        <img src="recuerdos/recuerdo 4.jpg" alt="Recuerdo 4">
+                    </div>
+                    <div class="floating-image" style="left: 25%; bottom: 15%; width: 100px; height: 100px;" draggable="true">
+                        <img src="recuerdos/recuerdo 5.jpeg" alt="Recuerdo 5">
+                    </div>
+                    <div class="floating-image" style="right: 25%; bottom: 15%; width: 100px; height: 100px;" draggable="true">
+                        <img src="recuerdos/recuerdo 6.jpg" alt="Recuerdo 6">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="tu-mensaje" class="py-10 md:py-16 px-4 md:px-6 bg-gradient-to-b from-[#26191C] to-[#1E1416]">
+        <div class="container mx-auto max-w-3xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title mb-8">Mensaje de tu Hermano</h2>
+            
+            <div class="p-8 max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl border border-[#A63429] border-opacity-30 shadow-xl">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#A66253] to-[#A63429] flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Con todo mi cariño</h3>
+                </div>
+                
+                <div class="text-white text-lg leading-relaxed italic">
+                    <p class="mb-4">"Hola hermanita, feliz cumpleaños, ya tienes 23 años y empiezas una nueva etapa en tu vida, quiero que sepas que estoy muy orgulloso de ti, de todo lo que haz logrado, de lo lejos que estas llegando, y de como día con día demuestras la fortaleza que tienes para seguir adelante."</p>
+                    
+                    <p class="mb-4">"Hermanita para mi eres un ejemplo a seguir, un ejemplo en como se tienen que hacer las cosa, con tu caracter y con tu deseo de avanzar."</p>
+                    
+                    <p>"Te amo con todo mi corazon hermanita, no cambies nunca, gracias por estar siempre a mi lado y ser mi real incondicional."</p>
+                </div>
+                
+                <div class="mt-6 text-right">
+                    <p class="text-[#A66253] font-bold text-xl">Te ama, tu hermano</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria" class="py-10 md:py-16 px-4 md:px-6 bg-[#1E1416]">
+        <div class="container mx-auto max-w-5xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title">Galería de Recuerdos</h2>
+            <div class="flex flex-wrap justify-center gap-6 mt-8">
+                <!-- Imágenes reales de la carpeta de recuerdos con mejor presentación -->
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdos 1.jpg" alt="Recuerdo 1" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdo 2.jpg" alt="Recuerdo 2" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdo 3.jpg" alt="Recuerdo 3" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+                <!-- Nuevas imágenes encontradas en la carpeta -->
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdo 4.jpg" alt="Recuerdo 4" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdo 5.jpeg" alt="Recuerdo 5" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+                <div class="w-64 bg-white p-3 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <img src="recuerdos/recuerdo 6.jpg" alt="Recuerdo 6" class="w-full h-auto rounded-lg" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="mensajes-familia" class="py-12 md:py-20 px-4 md:px-6 bg-gradient-to-b from-[#1E1416] to-[#26191C]">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-white section-title mb-12">Mensajes de la Familia</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Mensaje 1 -->
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl p-6 border border-[#A63429] border-opacity-30 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <svg class="w-10 h-10 text-[#A63429] opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-white text-lg mb-6 italic">"Por siempre mejoramigaprimahermana amikita te amo"</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-[#A63429] border-opacity-30">
+                            <p class="text-[#A66253] font-semibold">- Ivanna</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje 2 -->
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl p-6 border border-[#A63429] border-opacity-30 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <svg class="w-10 h-10 text-[#A63429] opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-white text-lg mb-6 italic">"Ñaaa, feliiiiiz Pumpe querida primitaaaa, se te ama mucho y te mando un abrazote a la distancia ya en julio voy para festejar todos los Pumpes que no se han podido festajarshhhhh con un pecho suco y y unos tostitos con salchichas xddd"</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-[#A63429] border-opacity-30">
+                            <p class="text-[#A66253] font-semibold">- Alejandro</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje 3 -->
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl p-6 border border-[#A63429] border-opacity-30 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <svg class="w-10 h-10 text-[#A63429] opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-grow overflow-y-auto max-h-64">
+                            <p class="text-white text-lg mb-6 italic">"Hola Nicki soy, creo que lo adecuado primeramente es desearte felices 23 primaveras y decirte que te amo mucho, pero yendo a una parte más profunda también quiero expresar la profunda admiración que te tengo prima, la mujer tan capaz, valiente y única que has construido a lo largo del tiempo es algo digno de admirar claro está, pero si me pongo un poco más reflexiva y hago una retrospectiva esa admiración no es algo exclusivo de estos últimos tiempos, cuando éramos niñas verte siempre tan alta, tan arreglada y con la colección más envidiable de muñecas del mundo siempre me hizo sentir que en algún punto de mi vida quería ser como tú, quizás fuiste la primera mujer que admire en mi vida, es algo tierno pensar como en la niñez y ahora en la adultez eres una referencia para mí y estoy segura que para todas las personas que te conocemos. Y ya que este es tu día creo que es la ocasión perfecta para decirte que yo y esa pequeña Pauli del pasado que tanto te admiraba están muy orgullosas de la mujer que eres hoy, espero que este año y todos los años siguientes sigas cumpliendo tus metas y que tengas toda la felicidad y amor que sé que te mereces, reitero te amo mucho prima espero que tengas el más feliz de los cumpleaños <3"</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-[#A63429] border-opacity-30">
+                            <p class="text-[#A66253] font-semibold">- Ana Paula</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje 4 -->
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl p-6 border border-[#A63429] border-opacity-30 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <svg class="w-10 h-10 text-[#A63429] opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-white text-lg mb-6 italic">"Ola amiga, primero que nada déjame decirte que eres una mujer muy maravillosa, una mujer fuerte y valiente. Gracias por formar parte de mi vida y por todos los momentos que compartimos, sigue siendo esa persona tan buena y con ese corazón tan grande que siempre has tenido, te quiero mucho y espero que la pases súper bien en tu día"</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-[#A63429] border-opacity-30">
+                            <p class="text-[#A66253] font-semibold">- Esteban</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje 5 -->
+                <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm rounded-xl p-6 border border-[#A63429] border-opacity-30 transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <div class="flex flex-col h-full">
+                        <div class="mb-4">
+                            <svg class="w-10 h-10 text-[#A63429] opacity-80" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-white text-lg mb-6 italic">"Hola prima bella, espero que tengas un muy feliz cumpleaños lleno de alegría y amor que esas 23 primaveras se lo merecen, recuerda que te amamos mucho y no podemos esperar para verte y celebrarte como es debido, te quiero mucho prima 🎉❤️"</p>
+                        </div>
+                        <div class="mt-auto pt-4 border-t border-[#A63429] border-opacity-30">
+                            <p class="text-[#A66253] font-semibold">- Sami</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Espacio para más mensajes en el futuro -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Fin de la página -->
+
+    <footer class="py-8 px-4 text-center text-[#8C786C] bg-[#1E1416]">
+        <div class="container mx-auto">
+            <p>Hecho con ❤️ para el cumpleaños de Niqui</p>
+            <p class="text-sm mt-2 opacity-70">© 2025 - Una página especial para alguien especial</p>
+        </div>
+    </footer>
+</body>
+</html>
